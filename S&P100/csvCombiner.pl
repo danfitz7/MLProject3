@@ -71,19 +71,37 @@ print "DATES:\n";
 
 print("Writing to file...\n");
 
+#target company
+my $targetCompanyTicker = "BIIB";
+my $targetCompanyIndex = 0;
+++$targetCompanyIndex until $tickers[$targetCompanyIndex] eq ($targetCompanyTicker) or ($targetCompanyIndex > @tickers); #find the index of the terget company
+print "Index of $targetCompanyTicker is $targetCompanyIndex\n";
+
 my $outputFileName = "C:/Users/Dan/Documents/CLASSWORK/Machine Learning/MLProject3/S&P100/COMBINED.csv";
 open(my $fh, '>', $outputFileName) or die "Could not open output file $outputFileName";
-	print $fh ("Date, ",join(',',@tickers),"\n");
+	#print the company names, save the target for last
+	#print $fh ("Date, ",join(',',@tickers),"\n");
+	print $fh "Data,";
+	foreach(@tickers){
+		if ($_ ne $targetCompanyTicker){
+			print $fh $_.",";
+		}
+	}
+	print $fh $targetCompanyTicker."\n";
+	
 	for ($dateIndex=0; $dateIndex<$nDates;$dateIndex++){
 		my $line = $dates[$dateIndex].", ";
 		for ($companyIndex = 0; $companyIndex<$nCompanies; $companyIndex++){
-			my $closing = $closingsLists[$companyIndex][$dateIndex];
-			#print("$tickers[$companyIndex]: ");
-			$line.= (($closing?$closing:"?").",");	
+			if ($companyIndex != $targetCompanyIndex){
+				my $closing = $closingsLists[$companyIndex][$dateIndex];
+				#print("$tickers[$companyIndex]: ");
+				$line.= (($closing?$closing:"?").",");	
+			}
 		}
-		chomp($line);
-		chop($line);
-		chop($line);
+		$line.=$closingsLists[$targetCompanyIndex][$dateIndex]; #get the target company at the end$targetCompanyIndex
+		#chomp($line);
+		#chop($line);
+		#chop($line);
 		print $fh $line."\n";
 	}
 close($fh);
