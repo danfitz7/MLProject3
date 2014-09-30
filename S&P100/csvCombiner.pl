@@ -81,7 +81,7 @@ my $outputFileName = "C:/Users/Dan/Documents/CLASSWORK/Machine Learning/MLProjec
 open(my $fh, '>', $outputFileName) or die "Could not open output file $outputFileName";
 	#print the company names, save the target for last
 	#print $fh ("Date, ",join(',',@tickers),"\n");
-	print $fh "Data,";
+	print $fh "Date,";
 	foreach(@tickers){
 		if ($_ ne $targetCompanyTicker){
 			print $fh $_.",";
