@@ -3,12 +3,15 @@
 use strict;
 use warnings;
 use English;
+use Date::Calc qw/Delta_Days/;
 
 my $nCompanies = 100;
-my $nDates = 231;
+my $nDates;
 
 my @tickers;
 my @closingsLists;
+my @dates;
+my $datesRetrieved = 0;
 my $companyIndex = 0;
 my $dateIndex = 0;
 		
@@ -32,6 +35,12 @@ opendir(my $dh, $path) or die "Cannot open dir $path";
 #				 print "Found Stocks for $ticker\n";
 				$lookingForTicker = 0
 			}else{
+				if ($datesRetrieved == 0 && /(\d{4})-(\d{2})-(\d{2})/){
+					my $date = ($3, $2, $3);
+					my $days = Delta_days((2013,1,1), $date)
+					push(@dates, $days);
+				}
+				
 				#^.+,\d*\.?\d*$
 				if (/\d{4}-\d{2}-\d{2},\d*\.?\d*,\d*\.?\d*,\d*\.?\d*,\d*\.?\d*,\d*,(\d*\.?\d*)$/){
 					my $closing = $1;
@@ -41,6 +50,11 @@ opendir(my $dh, $path) or die "Cannot open dir $path";
 				}
 			}
 		}
+		if ($dateIndex >0 ){
+			my $nDates = $dateIndex;
+			$datesRetrieved=$dateIndex
+		}
+		
 #		print("\tFound $dateIndex -1 dates\n");
 		
 		push(@tickers, $ticker);
@@ -53,13 +67,16 @@ opendir(my $dh, $path) or die "Cannot open dir $path";
 
 closedir($dh);
 
+print "DATES:\n";
+#print join("C:\Users\Dan\Documents\CLASSWORK\Machine Learning\MLProject3\S&P100\components\n",@dates);
+
 print("Writing to file...\n");
 
 my $outputFileName = "C:/Users/Dan/Documents/CLASSWORK/Machine Learning/MLProject3/S&P100/COMBINED.csv";
 open(my $fh, '>', $outputFileName) or die "Could not open output file $outputFileName";
-	print $fh (join(',',@tickers),"\n");
+	print $fh ("Date, ",join(',',@tickers),"\n");
 	for ($dateIndex=0; $dateIndex<$nDates;$dateIndex++){
-		#print("\nDATE $dateIndex\n$dateIndex");
+		print $fh (@dates[$dateIndex],", ");
 		for ($companyIndex = 0; $companyIndex<$nCompanies; $companyIndex++){
 			my $closing = $closingsLists[$companyIndex][$dateIndex];
 			#print("$tickers[$companyIndex]: ");
