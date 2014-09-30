@@ -75,13 +75,16 @@ my $outputFileName = "C:/Users/Dan/Documents/CLASSWORK/Machine Learning/MLProjec
 open(my $fh, '>', $outputFileName) or die "Could not open output file $outputFileName";
 	print $fh ("Date, ",join(',',@tickers),"\n");
 	for ($dateIndex=0; $dateIndex<$nDates;$dateIndex++){
-		print $fh (@dates[$dateIndex],", ");
+		my $line = $dates[$dateIndex].", ";
 		for ($companyIndex = 0; $companyIndex<$nCompanies; $companyIndex++){
 			my $closing = $closingsLists[$companyIndex][$dateIndex];
 			#print("$tickers[$companyIndex]: ");
-			print $fh (($closing?$closing:"?"),",\t");	
+			$line.= (($closing?$closing:"?").",");	
 		}
-		print $fh "\n";
+		chomp($line);
+		chop($line);
+		chop($line);
+		print $fh $line."\n";
 	}
 close($fh);
 print "\n...Done\n";
