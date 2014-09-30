@@ -36,9 +36,8 @@ opendir(my $dh, $path) or die "Cannot open dir $path";
 				$lookingForTicker = 0
 			}else{
 				if ($datesRetrieved == 0 && /(\d{4})-(\d{2})-(\d{2})/){
-					my $date = ($3, $2, $3);
-					my $days = Delta_days((2013,1,1), $date)
-					push(@dates, $days);
+					my $day = Delta_Days(2013,1,1, $1, $2, $3);
+					push(@dates, $day);
 				}
 				
 				#^.+,\d*\.?\d*$
@@ -51,7 +50,7 @@ opendir(my $dh, $path) or die "Cannot open dir $path";
 			}
 		}
 		if ($dateIndex >0 ){
-			my $nDates = $dateIndex;
+			$nDates = $dateIndex;
 			$datesRetrieved=$dateIndex
 		}
 		
