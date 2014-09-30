@@ -5,7 +5,7 @@ use warnings;
 use English;
 
 my $nCompanies = 100;
-my $nDates = 233;
+my $nDates = 231;
 
 my @tickers;
 my @closingsLists;
@@ -37,9 +37,9 @@ opendir(my $dh, $path) or die "Cannot open dir $path";
 					my $closing = $1;
 #					push(@closingList, $closing);
 					$closingsLists[$companyIndex][$dateIndex] = $closing;
+					$dateIndex++;
 				}
 			}
-			$dateIndex++;
 		}
 #		print("\tFound $dateIndex -1 dates\n");
 		
@@ -57,8 +57,8 @@ print("Writing to file...\n");
 
 my $outputFileName = "C:/Users/Dan/Documents/CLASSWORK/Machine Learning/MLProject3/S&P100/COMBINED.csv";
 open(my $fh, '>', $outputFileName) or die "Could not open output file $outputFileName";
-	print $fh join(',',@tickers);
-	for ($dateIndex=0; $dateIndex<$nDates/4;$dateIndex++){
+	print $fh (join(',',@tickers),"\n");
+	for ($dateIndex=0; $dateIndex<$nDates;$dateIndex++){
 		#print("\nDATE $dateIndex\n$dateIndex");
 		for ($companyIndex = 0; $companyIndex<$nCompanies; $companyIndex++){
 			my $closing = $closingsLists[$companyIndex][$dateIndex];
